@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+
+# Ambiente virtual Poetry
+.venv/
+
+# Banco SQLite (desenvolvimento)
+*.db
+*.sqlite3
+
+# Variáveis de ambiente — NUNCA subir o .env real
+.env
+*.env
+
+# IDEs
+.vscode/
+.idea/
+
+# Node / Frontend
+node_modules/
+dist/
+.next/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Alembic (não versionar banco gerado)
+*.db-shm
+*.db-wal
