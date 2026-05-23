@@ -1,29 +1,50 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
-CategoryType = Literal["income", "expense"]
-
-
-class CategoryBase(BaseModel):
-    name: str
-    type: CategoryType
-    icon: str | None = None
-    color: str | None = None
+PaymentMethod = Literal["pix", "transfer", "cash", "card", "other"]
+RecurrenceRule = Literal["monthly", "weekly", "yearly"]
 
 
-class CategoryCreate(CategoryBase):
+class IncomeBase(BaseModel):
+    description: str
+    amount: float
+    date: date
+    payment_method: PaymentMethod | None = None
+    source: str | None = None
+    notes: str | None = None
+    is_recurring: bool = False
+    recurrence_rule: RecurrenceRule | None = None
+    category_id: str | None = None
+    account_id: str | None = None
+
+    @field_validator("amount")
+    @classmethod
+    def amount_must_be_positive(cls, v: float) -> float:
+        if v <= 0:
+            raise ValueError("O valor deve ser maior que zero.")
+        return round(v, 2)
+
+
+class IncomeCreate(IncomeBase):
     pass
 
 
-class CategoryUpdate(BaseModel):
-    name: str | None = None
-    icon: str | None = None
-    color: str | None = None
+class IncomeUpdate(BaseModel):
+    description: str | None = None
+    amount: float | None = None
+    date: date | None = None
+    payment_method: PaymentMethod | None = None
+    source: str | None = None
+    notes: str | None = None
+    is_recurring: bool | None = None
+    recurrence_rule: RecurrenceRule | None = None
+    category_id: str | None = None
+    account_id: str | None = None
 
 
-class CategoryResponse(CategoryBase):
+class IncomeResponse(IncomeBase):
     id: str
     user_id: str
     created_at: datetime
