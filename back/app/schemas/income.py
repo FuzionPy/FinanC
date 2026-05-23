@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, field_validator
@@ -34,7 +34,7 @@ class IncomeCreate(IncomeBase):
 class IncomeUpdate(BaseModel):
     description: str | None = None
     amount: float | None = None
-    date: date | None = None
+    date: datetime.date | None = None
     payment_method: PaymentMethod | None = None
     source: str | None = None
     notes: str | None = None
