@@ -10,7 +10,7 @@ RecurrenceRule = Literal["monthly", "weekly", "yearly"]
 class IncomeBase(BaseModel):
     description: str
     amount: float
-    date: date
+    date: datetime.date
     payment_method: PaymentMethod | None = None
     source: str | None = None
     notes: str | None = None
