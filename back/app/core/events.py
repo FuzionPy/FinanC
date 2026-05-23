@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from app.core.config import get_settings
 from app.db.session import engine
 from app.db.base import Base
+import app.db.init_db  # noqa: F401 — garante que todos os models são registrados
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -15,12 +16,8 @@ settings = get_settings()
 async def lifespan(app: FastAPI):
     """
     Gerencia o ciclo de vida da aplicação FastAPI.
-
     Tudo antes do `yield` roda no STARTUP.
     Tudo depois do `yield` roda no SHUTDOWN.
-
-    Uso no main.py:
-        app = FastAPI(lifespan=lifespan)
     """
     # ── STARTUP ──────────────────────────────────────────────────────────────
     logger.info("🚀 Iniciando %s v%s...", settings.app_name, settings.app_version)
@@ -31,8 +28,6 @@ async def lifespan(app: FastAPI):
     else:
         logger.info("🗄️  Banco: PostgreSQL (produção)")
 
-    # Em desenvolvimento com SQLite, cria as tabelas automaticamente.
-    # Em produção, as tabelas são gerenciadas pelo Alembic (migrations).
     if settings.is_development and settings.is_sqlite:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
@@ -40,7 +35,7 @@ async def lifespan(app: FastAPI):
 
     logger.info("✅ Aplicação pronta.")
 
-    yield  # ← aplicação rodando
+    yield
 
     # ── SHUTDOWN ─────────────────────────────────────────────────────────────
     logger.info("🛑 Encerrando aplicação...")
