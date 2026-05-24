@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date as DateType, datetime
 from typing import Literal
 
 from pydantic import BaseModel, field_validator
@@ -10,7 +10,7 @@ RecurrenceRule = Literal["monthly", "weekly", "yearly"]
 class IncomeBase(BaseModel):
     description: str
     amount: float
-    date: datetime.date
+    date: DateType
     payment_method: PaymentMethod | None = None
     source: str | None = None
     notes: str | None = None
@@ -34,7 +34,7 @@ class IncomeCreate(IncomeBase):
 class IncomeUpdate(BaseModel):
     description: str | None = None
     amount: float | None = None
-    date: datetime.date | None = None
+    date: DateType | None = None
     payment_method: PaymentMethod | None = None
     source: str | None = None
     notes: str | None = None

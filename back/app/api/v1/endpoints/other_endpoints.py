@@ -9,7 +9,7 @@ from app.schemas.category import CategoryCreate, CategoryResponse, CategoryUpdat
 from app.schemas.common import MessageResponse
 from app.schemas.goal import GoalCreate, GoalResponse, GoalUpdate
 from app.schemas.notification import NotificationMarkRead, NotificationResponse
-from app.services.other_service import (
+from app.services.other_services import (
     AccountService,
     CategoryService,
     GoalService,

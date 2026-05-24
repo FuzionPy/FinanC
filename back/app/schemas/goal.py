@@ -3,52 +3,47 @@ from typing import Literal
 
 from pydantic import BaseModel, field_validator
 
-ExpenseStatus = Literal["pending", "paid", "overdue"]
-RecurrenceRule = Literal["monthly", "weekly", "yearly"]
+GoalStatus = Literal["active", "achieved", "cancelled"]
 
 
-class ExpenseBase(BaseModel):
-    description: str
-    amount: float
-    due_date: date
-    status: ExpenseStatus = "pending"
-    supplier: str | None = None
-    notes: str | None = None
-    is_recurring: bool = False
-    recurrence_rule: RecurrenceRule | None = None
+class GoalBase(BaseModel):
+    title: str
+    description: str | None = None
+    target_amount: float
+    deadline: date | None = None
+    icon: str | None = None
+    color: str | None = None
     category_id: str | None = None
-    account_id: str | None = None
 
-    @field_validator("amount")
+    @field_validator("target_amount")
     @classmethod
-    def amount_must_be_positive(cls, v: float) -> float:
+    def target_must_be_positive(cls, v: float) -> float:
         if v <= 0:
-            raise ValueError("O valor deve ser maior que zero.")
+            raise ValueError("O valor alvo deve ser maior que zero.")
         return round(v, 2)
 
 
-class ExpenseCreate(ExpenseBase):
+class GoalCreate(GoalBase):
     pass
 
 
-class ExpenseUpdate(BaseModel):
+class GoalUpdate(BaseModel):
+    title: str | None = None
     description: str | None = None
-    amount: float | None = None
-    due_date: date | None = None
-    paid_date: date | None = None
-    status: ExpenseStatus | None = None
-    supplier: str | None = None
-    notes: str | None = None
-    is_recurring: bool | None = None
-    recurrence_rule: RecurrenceRule | None = None
-    category_id: str | None = None
-    account_id: str | None = None
+    target_amount: float | None = None
+    current_amount: float | None = None
+    deadline: date | None = None
+    status: GoalStatus | None = None
+    icon: str | None = None
+    color: str | None = None
 
 
-class ExpenseResponse(ExpenseBase):
+class GoalResponse(GoalBase):
     id: str
     user_id: str
-    paid_date: date | None
+    current_amount: float
+    status: GoalStatus
+    progress_percent: float
     created_at: datetime
 
     model_config = {"from_attributes": True}
